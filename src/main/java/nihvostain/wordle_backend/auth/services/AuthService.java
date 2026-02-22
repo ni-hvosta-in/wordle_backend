@@ -1,12 +1,11 @@
-package nihvostain.wordle_backend.auth;
+package nihvostain.wordle_backend.auth.services;
 
 import nihvostain.wordle_backend.auth.dto.AuthRequest;
 import nihvostain.wordle_backend.auth.dto.AuthResponse;
-import nihvostain.wordle_backend.auth.entity.User;
-import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
+import nihvostain.wordle_backend.auth.exceptions.AuthException;
+import nihvostain.wordle_backend.user.User;
+import nihvostain.wordle_backend.user.UserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {

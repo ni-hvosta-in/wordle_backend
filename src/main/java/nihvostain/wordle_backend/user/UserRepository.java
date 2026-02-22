@@ -1,6 +1,5 @@
-package nihvostain.wordle_backend.auth;
+package nihvostain.wordle_backend.user;
 
-import nihvostain.wordle_backend.auth.entity.User;
 import org.springframework.data.repository.Repository;
 
 import java.util.Optional;

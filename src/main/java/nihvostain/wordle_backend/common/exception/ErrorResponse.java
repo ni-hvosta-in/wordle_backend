@@ -1,4 +1,4 @@
-package nihvostain.wordle_backend.auth;
+package nihvostain.wordle_backend.common.exception;
 
 public record ErrorResponse (
         String message

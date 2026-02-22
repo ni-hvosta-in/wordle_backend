@@ -1,5 +1,6 @@
-package nihvostain.wordle_backend.auth;
+package nihvostain.wordle_backend.auth.controller;
 import jakarta.validation.Valid;
+import nihvostain.wordle_backend.auth.services.AuthService;
 import nihvostain.wordle_backend.auth.dto.AuthRequest;
 import nihvostain.wordle_backend.auth.dto.AuthResponse;
 

@@ -1,8 +1,6 @@
-package nihvostain.wordle_backend.auth.entity;
+package nihvostain.wordle_backend.user;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity

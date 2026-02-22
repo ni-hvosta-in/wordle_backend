@@ -1,7 +1,6 @@
-package nihvostain.wordle_backend;
+package nihvostain.wordle_backend.common.exception;
 
-import nihvostain.wordle_backend.auth.AuthException;
-import nihvostain.wordle_backend.auth.ErrorResponse;
+import nihvostain.wordle_backend.auth.exceptions.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
