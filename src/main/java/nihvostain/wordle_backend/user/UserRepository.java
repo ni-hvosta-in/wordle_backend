@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface UserRepository extends Repository<User, Long> {
     Optional<User> findUserByLogin(String login);
     boolean existsUserByLogin(String login);
-    User save(User user);
+    void save(User user);
 }

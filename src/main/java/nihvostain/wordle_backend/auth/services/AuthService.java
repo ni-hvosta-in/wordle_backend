@@ -3,6 +3,7 @@ package nihvostain.wordle_backend.auth.services;
 import nihvostain.wordle_backend.auth.dto.AuthRequest;
 import nihvostain.wordle_backend.auth.dto.AuthResponse;
 import nihvostain.wordle_backend.auth.exceptions.AuthException;
+import nihvostain.wordle_backend.common.services.JWTService;
 import nihvostain.wordle_backend.user.User;
 import nihvostain.wordle_backend.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     UserRepository userRepository;
+    JWTService jwtService;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, JWTService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public AuthResponse login(AuthRequest authRequest) throws AuthException {
@@ -26,7 +29,7 @@ public class AuthService {
             throw new AuthException("Invalid password");
         }
 
-        return new AuthResponse("auth", "1234");
+       return new AuthResponse("auth", jwtService.generateToken(user));
 
     }
 
@@ -39,7 +42,7 @@ public class AuthService {
         User user = new User(authRequest.login(), authRequest.password());
         userRepository.save(user);
 
-        return new AuthResponse("auth", "1234");
+        return new AuthResponse("auth", jwtService.generateToken(user));
 
     }
 }
