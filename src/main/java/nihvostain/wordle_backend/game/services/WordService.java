@@ -2,6 +2,7 @@ package nihvostain.wordle_backend.game.services;
 
 import jakarta.annotation.PostConstruct;
 import nihvostain.wordle_backend.game.Level;
+import nihvostain.wordle_backend.user.User;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -58,6 +59,10 @@ public class WordService {
         long day = LocalDate.now(ZoneOffset.UTC).toEpochDay();
         Random random = new Random(day);
         return words.get(random.nextInt(words.size()));
+    }
+
+    public String getPersonalWord(Level level, int index){
+        return wordsToGenerate.get(level).get(index);
     }
 
     public boolean dictionaryContains(String word) {

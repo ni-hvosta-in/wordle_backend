@@ -1,0 +1,32 @@
+package nihvostain.wordle_backend.game.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import nihvostain.wordle_backend.user.User;
+
+
+@Entity
+public class UserGame {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
+    private User user;
+
+    private int a1Index;
+    private int a2Index;
+    private int b1Index;
+    private int b2Index;
+
+    public UserGame(User user){
+        this.user = user;
+    }
+
+    public UserGame() {
+
+    }
+}
