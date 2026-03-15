@@ -1,12 +1,16 @@
 package nihvostain.wordle_backend.game.modes;
 
 import nihvostain.wordle_backend.game.GameMode;
+import nihvostain.wordle_backend.game.LetterStatus;
 import nihvostain.wordle_backend.game.Level;
 import nihvostain.wordle_backend.game.entity.UserGame;
 import nihvostain.wordle_backend.game.entity.UserGameRepository;
 import nihvostain.wordle_backend.game.services.WordChecker;
 import nihvostain.wordle_backend.game.services.WordService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 @Component
 public class PersonalGameStrategy implements GameModeStrategy {
@@ -21,13 +25,19 @@ public class PersonalGameStrategy implements GameModeStrategy {
         this.wordService = wordService;
     }
     @Override
+    @Transactional
     public String[] check(Long id, String attempt, Level level) {
 
         UserGame userGame = userGameRepository.findByUserId(id).orElseThrow(
                 () -> new RuntimeException("User game not found")
         );
 
-        String target = wordService.getPersonalWord(level, userGame.getIndexByLevel(level));
+        int index = userGame.getIndexByLevel(level);
+        String target = wordService.getPersonalWord(level, index);
+        String [] statuses = wordChecker.checkWord(target, attempt);
+        if (Arrays.stream(statuses).allMatch((status) -> status.equals(LetterStatus.CORRECT.getStatus()))) {
+            userGame.setIndexByLevel(level, index + 1);
+        }
         return wordChecker.checkWord(attempt, target);
     }
 

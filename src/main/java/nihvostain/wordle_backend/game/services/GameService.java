@@ -1,54 +1,36 @@
 package nihvostain.wordle_backend.game.services;
 
+import nihvostain.wordle_backend.game.GameMode;
 import nihvostain.wordle_backend.game.LetterStatus;
 import nihvostain.wordle_backend.game.Level;
 import nihvostain.wordle_backend.game.NonExistentWordException;
+import nihvostain.wordle_backend.game.modes.GameModeStrategy;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class GameService {
 
     WordService wordService;
-
-    public GameService(WordService wordService) {
+    Map<GameMode, GameModeStrategy> strategies = new HashMap<>();
+    public GameService(List<GameModeStrategy> strategies, WordService wordService) {
         this.wordService = wordService;
+
+        for (GameModeStrategy strategy : strategies) {
+            this.strategies.put(strategy.getGameMode(), strategy);
+        }
     }
 
-    public String [] checkDaily (String attempt, Level level) throws NonExistentWordException {
+    public String [] check (GameMode gameMode, Long id, String attempt, Level level) throws NonExistentWordException {
 
         if (!wordService.dictionaryContains(attempt)){
             throw new NonExistentWordException("Such a word does not exist");
         }
 
-        char [] dailyWordChars = wordService.getDailyWord(level).toCharArray();
-
-        char [] attemptChars = attempt.toCharArray();
-        Map<Character, Integer> letterCount = new HashMap<>();
-        for (char ch : dailyWordChars) {
-            letterCount.put(ch, letterCount.getOrDefault(ch, 0) + 1);
-        }
-
-        System.out.println(letterCount);
-        String [] statues = new String [attempt.length()];
-
-        for (int i = 0; i < attemptChars.length; i++) {
-
-            if (letterCount.containsKey(attemptChars[i]) && letterCount.get(attemptChars[i]) > 0) {
-                if (dailyWordChars[i] == attemptChars[i]) {
-                    statues[i] = LetterStatus.CORRECT.getStatus();
-                } else {
-                    statues[i] = LetterStatus.INCLUDES.getStatus();
-                }
-                letterCount.put(attemptChars[i], letterCount.get(attemptChars[i]) - 1);
-            }
-            if (!letterCount.containsKey(attemptChars[i])) {
-                statues[i] = LetterStatus.WRONG.getStatus();
-            }
-        }
-
-        return statues;
+        return strategies.get(gameMode).check(id, attempt, level);
     }
+
 }

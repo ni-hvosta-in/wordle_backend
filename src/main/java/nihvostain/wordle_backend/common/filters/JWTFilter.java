@@ -27,6 +27,11 @@ public class JWTFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String auth = request.getHeader("Authorization");
 
         if (auth == null || !auth.startsWith("Bearer ")) {

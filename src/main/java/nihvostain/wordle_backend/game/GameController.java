@@ -1,5 +1,6 @@
 package nihvostain.wordle_backend.game;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import nihvostain.wordle_backend.game.dto.GameRequest;
 import nihvostain.wordle_backend.game.dto.GameResponse;
@@ -33,8 +34,9 @@ public class GameController {
 
     @PostMapping("/personal/check")
     public ResponseEntity<GameResponse> checkPersonalWord(@Valid @RequestBody GameRequest gameRequest,
-                                                          @RequestHeader("Authorization") String token){
-        System.out.println(token);
-        return ResponseEntity.ok(new GameResponse(null));
+                                                          @RequestHeader("Authorization") String token, HttpServletRequest request){
+        Long userID = (Long) request.getAttribute("userID");
+        System.out.println(userID);
+        return ResponseEntity.ok(new GameResponse(gameService.check(GameMode.PERSONAL, userID, gameRequest.attempt(), gameRequest.level())));
     }
 }

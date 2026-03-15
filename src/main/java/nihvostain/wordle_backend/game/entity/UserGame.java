@@ -41,4 +41,13 @@ public class UserGame {
         };
 
     }
+
+    public void setIndexByLevel(Level level, int index){
+        switch (level){
+            case A1 -> a1Index = index;
+            case A2 -> a2Index = index;
+            case B1 -> b1Index = index;
+            case B2 -> b2Index = index;
+        }
+    }
 }

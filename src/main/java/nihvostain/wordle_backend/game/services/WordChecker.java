@@ -19,23 +19,23 @@ public class WordChecker {
         }
 
         System.out.println(letterCount);
-        String [] statues = new String [attempt.length()];
+        String [] statuses = new String [attempt.length()];
 
         for (int i = 0; i < attemptChars.length; i++) {
 
             if (letterCount.containsKey(attemptChars[i]) && letterCount.get(attemptChars[i]) > 0) {
                 if (targetChars[i] == attemptChars[i]) {
-                    statues[i] = LetterStatus.CORRECT.getStatus();
+                    statuses[i] = LetterStatus.CORRECT.getStatus();
                 } else {
-                    statues[i] = LetterStatus.INCLUDES.getStatus();
+                    statuses[i] = LetterStatus.INCLUDES.getStatus();
                 }
                 letterCount.put(attemptChars[i], letterCount.get(attemptChars[i]) - 1);
             }
             if (!letterCount.containsKey(attemptChars[i])) {
-                statues[i] = LetterStatus.WRONG.getStatus();
+                statuses[i] = LetterStatus.WRONG.getStatus();
             }
         }
 
-        return statues;
+        return statuses;
     }
 }
