@@ -35,6 +35,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String auth = request.getHeader("Authorization");
 
         if (auth == null || !auth.startsWith("Bearer ")) {
+            addCorsHeaders(response);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -45,6 +46,7 @@ public class JWTFilter extends OncePerRequestFilter {
             Long id = jwtService.extractUserId(token);
             request.setAttribute("userID", id);
         } catch (JWTVerificationException | NumberFormatException e) {
+            addCorsHeaders(response);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -58,4 +60,12 @@ public class JWTFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         return !path.startsWith("/game/personal");
     }
+
+    private void addCorsHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+    }
+
 }
