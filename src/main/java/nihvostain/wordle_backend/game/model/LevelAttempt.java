@@ -20,4 +20,13 @@ public class LevelAttempt {
         ArrayList<Attempt> attempts = levelAttempts.get(level);
         attempts.remove(attempt);
     }
+
+    public ArrayList<Attempt> getAttempts(Level level) {
+        return levelAttempts.get(level);
+    }
+
+    @Override
+    public String toString() {
+        return levelAttempts.toString();
+    }
 }

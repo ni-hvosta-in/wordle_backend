@@ -3,6 +3,7 @@ package nihvostain.wordle_backend.game.services;
 import nihvostain.wordle_backend.game.LetterStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class WordChecker {
 
         System.out.println(letterCount);
         LetterStatus [] statuses = new LetterStatus [attempt.length()];
+        Arrays.fill(statuses, LetterStatus.WRONG);
 
         for (int i = 0; i < attemptChars.length; i++) {
 
