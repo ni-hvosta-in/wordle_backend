@@ -7,8 +7,10 @@ import nihvostain.wordle_backend.game.Level;
 import nihvostain.wordle_backend.game.entity.UserGame;
 import nihvostain.wordle_backend.game.entity.UserGameRepository;
 import nihvostain.wordle_backend.game.services.GameSessionService;
+import nihvostain.wordle_backend.game.services.UserProgressService;
 import nihvostain.wordle_backend.game.services.WordChecker;
 import nihvostain.wordle_backend.game.services.WordService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,28 +19,31 @@ import java.util.Arrays;
 @Component
 public class PersonalGameStrategy implements GameModeStrategy {
 
-    private static final int MAX_ATTEMPTS = 6;
+    @Value("${game.attempt.count}")
+    private int MAX_ATTEMPTS;
 
-    UserGameRepository userGameRepository;
-    WordChecker wordChecker;
-    WordService wordService;
-    GameSessionService gameSessionService;
+    private final WordChecker wordChecker;
+    private final WordService wordService;
+    private final GameSessionService gameSessionService;
+    private final UserProgressService userProgressService;
 
-    public PersonalGameStrategy(UserGameRepository userGameRepository, WordChecker wordChecker, WordService wordService, GameSessionService gameSessionService) {
-        this.userGameRepository = userGameRepository;
+    public PersonalGameStrategy(WordChecker wordChecker,
+                                WordService wordService,
+                                GameSessionService gameSessionService,
+                                UserProgressService userProgressService) {
+
         this.wordChecker = wordChecker;
         this.wordService = wordService;
         this.gameSessionService = gameSessionService;
+        this.userProgressService = userProgressService;
+
     }
+
     @Override
     @Transactional
     public LetterStatus[] check(Long id, String attempt, Level level) {
 
-        UserGame userGame = userGameRepository.findByUserId(id).orElseThrow(
-                () -> new EntityNotFoundException("User game not found")
-        );
-
-        int index = userGame.getIndexByLevel(level);
+        int index = userProgressService.getUserIndex(id, level);
         String target = wordService.getPersonalWord(level, index);
         LetterStatus [] statuses = wordChecker.checkWord(attempt, target);
 
@@ -47,13 +52,17 @@ public class PersonalGameStrategy implements GameModeStrategy {
         if (Arrays.stream(statuses).allMatch((status) -> status.equals(LetterStatus.CORRECT))
                 || gameSessionService.getAttemptsByLevel(id, level).size() == MAX_ATTEMPTS) {
 
-            userGame.setIndexByLevel(level, index + 1);
+            System.out.println(index);
+            userProgressService.incrementUserIndex(id, level);
+
+            System.out.println( userProgressService.getUserIndex(id, level));
             gameSessionService.clearAttempts(id, level);
 
         }
 
         return statuses;
     }
+
 
     @Override
     public GameMode getGameMode() {
