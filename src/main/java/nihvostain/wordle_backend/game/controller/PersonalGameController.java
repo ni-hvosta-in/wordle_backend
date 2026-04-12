@@ -55,7 +55,8 @@ public class PersonalGameController {
         Long userID = getUserID(request);
 
         int index = userProgressService.getUserIndex(userID, level);
-        String word = wordService.getPersonalWord(level, index);
+        String word = wordService.getPersonalWord(level, index - 1);
+
         return ResponseEntity.ok(word);
     }
 

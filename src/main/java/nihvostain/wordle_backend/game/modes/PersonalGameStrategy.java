@@ -52,10 +52,7 @@ public class PersonalGameStrategy implements GameModeStrategy {
         if (Arrays.stream(statuses).allMatch((status) -> status.equals(LetterStatus.CORRECT))
                 || gameSessionService.getAttemptsByLevel(id, level).size() == MAX_ATTEMPTS) {
 
-            System.out.println(index);
             userProgressService.incrementUserIndex(id, level);
-
-            System.out.println( userProgressService.getUserIndex(id, level));
             gameSessionService.clearAttempts(id, level);
 
         }
